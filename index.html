@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Finances">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>My Finances</title>
+<style>
+:root{--bg:#f2f2f7;--cd:#fff;--tx:#111827;--mu:#6b7280;--ln:#e5e7eb;--ac:#0f766e;--acx:#fff;--ok:#15803d;--bad:#dc2626;--wn:#b45309;--soft:#eef0f3;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--cd:#1c1c1e;--tx:#f3f4f6;--mu:#9ca3af;--ln:#2c2c2e;--ac:#2dd4bf;--acx:#00302a;--ok:#4ade80;--bad:#f87171;--wn:#fbbf24;--soft:#2c2c2e;color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx)}
+body{font:16px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;padding:env(safe-area-inset-top) 0 calc(78px + env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
+header{padding:14px 16px 2px;max-width:640px;margin:auto}
+h1{font-size:30px;margin:0;font-weight:750;letter-spacing:-.02em}
+main{max-width:640px;margin:auto;padding:10px 16px 24px}
+.c{background:var(--cd);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 8px}
+.l{font-size:13px;color:var(--mu)}.m{color:var(--mu);font-size:13px;margin:8px 0 0}
+.big{font-size:36px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+.n{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0}
+.row+.row{border-top:1px solid var(--ln)}
+.row .t{min-width:0;flex:1}.row .t b{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .t span{font-size:13px;color:var(--mu);display:block}
+.amt{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;text-align:right}
+.bar{height:8px;border-radius:4px;background:var(--soft);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--ac);border-radius:4px}.bar.x i{background:var(--bad)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.wn{color:var(--wn)}.mu{color:var(--mu)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two .c{margin:0}
+.pill{font-size:12px;padding:2px 8px;border-radius:10px;background:var(--soft);color:var(--mu);white-space:nowrap}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--cd) 90%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:1px solid var(--ln);display:flex;justify-content:space-around;padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--mu);font:500 11px -apple-system,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;min-height:50px;cursor:pointer}
+nav button.on{color:var(--ac)}nav svg{width:25px;height:25px}nav .add{color:var(--ac)}nav .add svg{width:40px;height:40px;margin-top:-2px}
+button{cursor:pointer}
+button.b{display:block;background:var(--ac);color:var(--acx);border:0;border-radius:12px;padding:14px 16px;font:600 16px -apple-system,system-ui,sans-serif;width:100%;margin-top:10px}
+button.g{background:var(--soft);color:var(--tx)}button.r{background:var(--bad);color:#fff}
+button.k{background:none;border:0;color:var(--ac);font:500 15px -apple-system,system-ui,sans-serif;padding:6px 0 6px 10px;white-space:nowrap}
+input,select,textarea{font:16px -apple-system,system-ui,sans-serif;color:var(--tx);background:var(--soft);border:0;border-radius:10px;padding:12px;width:100%;-webkit-appearance:none;appearance:none}
+textarea{height:110px;font:12px ui-monospace,Menlo,monospace}
+.fld{margin-bottom:14px}.fld>label{display:block;font-size:13px;color:var(--mu);margin:0 0 6px 2px}
+.seg{display:flex;background:var(--soft);border-radius:10px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:none;color:var(--tx);padding:8px 2px;border-radius:8px;font:500 13.5px -apple-system,system-ui,sans-serif}
+.seg button.on{background:var(--cd);box-shadow:0 1px 3px rgba(0,0,0,.18);font-weight:650}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--ln);background:var(--cd);color:var(--tx);border-radius:18px;padding:8px 12px;font:14px -apple-system,system-ui,sans-serif}
+.chip.on{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+.amtin{font-size:44px;font-weight:750;text-align:center;background:none;padding:4px;font-variant-numeric:tabular-nums}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.mnav b{font-size:17px}
+.mnav button{background:var(--cd);border:0;border-radius:10px;width:40px;height:36px;font-size:20px;color:var(--ac)}
+.day{font-size:13px;color:var(--mu);font-weight:600;margin:14px 4px 6px;text-transform:uppercase;letter-spacing:.03em}
+.sel{background:var(--soft);margin:0 -16px;padding:10px 16px}
+.hint{border:1px dashed var(--ac)}
+#toast{position:fixed;left:16px;right:16px;bottom:calc(86px + env(safe-area-inset-bottom));max-width:600px;margin:auto;background:var(--tx);color:var(--bg);padding:12px 14px;border-radius:12px;font-size:14px;z-index:9;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#toast[hidden],#sheet[hidden]{display:none}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;z-index:10}
+.sh{background:var(--cd);width:100%;max-width:640px;margin:0 auto;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+.sh .two{margin-top:4px}.sh .two button{margin-top:0}
+</style>
+</head>
+<body>
+<header><h1 id="ttl">Home</h1></header>
+<main id="v"></main>
+<nav id="nav"></nav>
+<div id="toast" hidden></div>
+<div id="sheet" hidden onclick="if(event.target===this)closeSheet()"><div class="sh" id="shb"></div></div>
+<script>
+'use strict';
+/* ---------- Storage: everything is saved on this phone, in this app's own storage ---------- */
+const K='pfm2';
+const q=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $f=n=>(n<0?'−':'')+'$'+Math.abs(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const p2=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const td=()=>ymd(new Date()),mk=()=>td().slice(0,7);
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const mname=m=>MN[+m.slice(5,7)-1]+' '+m.slice(0,4);
+const dlabel=s=>{const d=new Date(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})};
+const uid=()=>'t'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const ddays=(a,b)=>Math.abs((new Date(a)-new Date(b))/864e5);
+const E=()=>({v:2,accounts:[],assets:[],debts:[],budget:[],goals:[],tx:[],rec:[],opened:'',split:{},skip:{},lastBackup:'',paySeen:''});
+let D,saveOK=true;
+function ld(){let x=null;try{x=JSON.parse(localStorage.getItem(K))}catch(e){}D=Object.assign(E(),x||{})}
+function sv(){try{localStorage.setItem(K,JSON.stringify(D));saveOK=true}catch(e){saveOK=false}}
+
+/* ---------- Calculations ---------- */
+function calc(){const a={},d={};D.accounts.forEach(x=>a[x.id]=x.bal);D.debts.forEach(x=>d[x.id]=x.bal);
+  const ad=(i,v)=>{if(i in a)a[i]+=v;else if(i in d)d[i]-=v};
+  D.tx.forEach(t=>{const m=t.amt,y=t.type;
+    if(y==='income'||y==='refund')ad(t.acct,m);
+    else if(y==='expense')ad(t.acct,-m);
+    else if(y==='transfer'){ad(t.acct,-m);ad(t.to,m)}
+    else if(y==='debtpay'){ad(t.acct,-m);if(t.to in d)d[t.to]-=(t.pr!=null?t.pr:m)}});
+  return{a,d}}
+const sum=o=>Object.values(o).reduce((x,y)=>x+y,0);
+const capOf=(b,m)=>b.m&&b.m[m]!=null?b.m[m]:b.cap;
+function spend(m){const s={};let inc=0,ex=0;D.tx.filter(t=>t.date.slice(0,7)===m).forEach(t=>{
+  if(t.type==='income')inc+=t.amt;
+  if(t.type==='expense'){s[t.cat]=(s[t.cat]||0)+t.amt;ex+=t.amt}
+  if(t.type==='refund'){s[t.cat]=(s[t.cat]||0)-t.amt;ex-=t.amt}});return{s,inc,ex}}
+const nm=id=>{const x=D.accounts.concat(D.debts).find(z=>z.id===id);return x?x.name:'?'};
+const isFixed=c=>D.budget.some(b=>b.cat===c&&b.fixed);
+function leftToSpend(m){const S=spend(m),flex=D.budget.filter(b=>!b.fixed);
+  const cap=flex.reduce((x,b)=>x+capOf(b,m),0);let used=0;
+  Object.keys(S.s).forEach(c=>{if(!isFixed(c))used+=Math.max(0,S.s[c])});
+  return{cap,used,left:cap-used,S}}
+const monthsLeft=x=>{if(!x.pay)return'';if(x.bal<=0)return'paid off';const r=x.rate/100;if(!r)return Math.ceil(x.bal/x.pay)+' months left';
+  const k=1-r*x.bal/x.pay;return k<=0?'payment too low to finish':Math.ceil(-Math.log(k)/Math.log(1+r))+' months left (est.)'};
+
+/* ---------- Automatic payments: posted on their real charge day when you open the app ---------- */
+function rd2(r,y,m){const n=new Date(y,m,0).getDate(),k=y+'-'+p2(m);let d=Math.min((r.ov&&r.ov[k])||r.day,n),dt=new Date(y,m-1,d);
+  if(r.wk){const w=dt.getDay();if(w===6)dt.setDate(d-1);if(w===0)dt.setDate(d-2)}return ymd(dt)}
+const active=(r,mm,m)=>!r.off&&!(r.from&&mm<r.from)&&!(r.until&&mm>r.until)&&!(r.mos&&!r.mos.includes(m));
+function auto(){if(!D.accounts.length||!D.opened||!D.rec.length)return 0;const t=td(),now=new Date();
+  let y=+D.opened.slice(0,4),m=+D.opened.slice(5,7),n=0;
+  while(y<now.getFullYear()||(y===now.getFullYear()&&m<=now.getMonth()+1)){const mm=y+'-'+p2(m);
+    D.rec.forEach(r=>{if(!active(r,mm,m))return;const date=rd2(r,y,m),k=r.id+mm;
+      if(date>t||date<=D.opened||D.skip[k])return;
+      if(D.tx.some(x=>x.rid===k||(!x.rid&&ddays(x.date,date)<=3&&x.type===r.type&&x.acct===r.acct&&(x.cat||'')===(r.cat||'')&&Math.abs(x.amt-r.amt)<.5)))return;
+      let pr=null;
+      if(r.loan){pr=r.prov&&r.prov[mm];if(pr==null){const b=calc().d[r.to],days=Math.round((new Date(y,m-1,r.day)-new Date(y,m-2,r.day))/864e5);
+        pr=Math.round((r.amt-(r.loan.other||0)-b*r.loan.rate*days/360)*100)/100}}
+      const tx={id:uid(),date,type:r.type,acct:r.acct,to:r.to||'',amt:r.amt,cat:r.cat||'',note:r.name,rid:k,auto:1};if(pr!=null)tx.pr=pr;
+      D.tx.push(tx);n++});
+    m++;if(m>12){m=1;y++}}
+  if(n){sv();toast(n+' automatic payment'+(n>1?'s':'')+' added on their real dates.')}return n}
+function nextDate(r){const n=new Date();let y=n.getFullYear(),m=n.getMonth()+1;const t=td();
+  for(let i=0;i<14;i++){const mm=y+'-'+p2(m),k=r.id+mm;if(active(r,mm,m)&&!D.skip[k]&&!D.tx.some(x=>x.rid===k)){const d=rd2(r,y,m);if(d>=t&&d>D.opened)return d}m++;if(m>12){m=1;y++}}return''}
+function upcoming(days){const t=td(),lim=ymd(new Date(Date.now()+days*864e5)),L=[];
+  D.rec.forEach(r=>{const d=nextDate(r);if(d&&d<=lim)L.push({d,name:r.name,amt:r.amt,type:r.type,where:nm(r.acct)})});
+  D.debts.filter(x=>x.card&&x.due&&!D.rec.some(r=>r.to===x.id)).forEach(x=>{const n=new Date();let dt=new Date(n.getFullYear(),n.getMonth(),x.due);
+    if(ymd(dt)<t)dt=new Date(n.getFullYear(),n.getMonth()+1,x.due);const d=ymd(dt);if(d<=lim)L.push({d,name:x.name+' payment due (you decide the amount)',amt:null,type:'due'})});
+  return L.sort((a,b)=>a.d<b.d?-1:1)}
+
+/* ---------- UI helpers ---------- */
+let tT;function toast(s){const e=q('#toast');e.textContent=s;e.hidden=false;clearTimeout(tT);tT=setTimeout(()=>e.hidden=true,3800)}
+let shCb=null;
+function sheet(title,val,cb,opt){opt=opt||{};shCb=cb;const ty=opt.text?'text':'number';
+  q('#shb').innerHTML=`<h2>${esc(title)}</h2>${opt.note?`<p class="m" style="margin:0 0 10px">${esc(opt.note)}</p>`:''}
+  <input id="shv" type="${ty}" ${ty==='number'?'inputmode="decimal" step="0.01"':''} value="${esc(val)}">
+  <div class="two" style="margin-top:12px"><button class="b g" onclick="closeSheet()">Cancel</button><button class="b" onclick="okSheet()">Save</button></div>`;
+  q('#sheet').hidden=false;setTimeout(()=>{const i=q('#shv');i.focus();i.select&&i.select()},60)}
+function confirmSheet(title,note,label,cb,danger){shCb=cb;q('#shb').innerHTML=`<h2>${esc(title)}</h2><p class="m" style="margin:0 0 12px">${esc(note)}</p>
+  <div class="two"><button class="b g" onclick="closeSheet()">Cancel</button><button class="b ${danger?'r':''}" onclick="okSheet(1)">${esc(label)}</button></div>`;q('#sheet').hidden=false}
+function closeSheet(){q('#sheet').hidden=true;shCb=null}
+function okSheet(c){const cb=shCb;if(!cb)return closeSheet();if(c){closeSheet();cb();return}
+  const raw=q('#shv').value,v=q('#shv').type==='number'?parseFloat(raw):raw.trim();
+  if(q('#shv').type==='number'&&isNaN(v))return toast('Enter a number.');if(v==='')return;closeSheet();cb(v);sv();draw()}
+const bar=(v,t,inv)=>{const p=t>0?Math.min(100,Math.max(0,v/t*100)):(v>0?100:0);return`<div class="bar ${inv&&v>t?'x':''}"><i style="width:${p}%"></i></div>`};
+
+/* ---------- Screens ---------- */
+let view='home',am=mk(),sel='',pend='';
+const standalone=()=>window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+
+function welcome(){return`${standalone()?'':installTip()}<div class="c"><h2>Welcome</h2><p>Nothing is loaded yet. Load your data file (<b>my_data</b>…<b>.json</b>) or a backup.</p>
+  <label class="b" style="text-align:center;display:block;cursor:pointer">Choose data file<input type="file" accept=".json,.csv,.txt,application/json,text/plain" hidden onchange="readFile(this)"></label>
+  <p class="m">Your data stays on this phone only. Nothing is sent anywhere, and no bank is connected.</p></div>`}
+function installTip(){return`<div class="c hint"><h2>Install it first</h2><p style="margin:0">In Safari tap <b>Share</b> → <b>Add to Home Screen</b>, then open <b>Finances</b> from your home screen and load your data there. Data added here in Safari stays in Safari and won’t appear in the installed app.</p></div>`}
+
+function payCard(){const t=td(),lim=ymd(new Date(Date.now()-3*864e5));
+  const p=D.tx.filter(x=>x.type==='income'&&x.cat==='Salary'&&x.date<=t&&x.date>=lim).sort((a,b)=>a.date<b.date?1:-1)[0];
+  if(!p||D.paySeen===p.id)return'';const day=+p.date.slice(8),key=day>=10&&day<=20?'p15':'p30',L=D.split[key];if(!L||!L.length)return'';
+  return`<div class="c hint"><h2>Payday: split your ${$f(p.amt)}</h2>${splitRows(L)}
+  <button class="b" onclick="doSplit('${p.id}','${key}')">I did these moves</button><button class="b g" onclick="D.paySeen='${p.id}';sv();draw()">Hide</button>
+  <p class="m">“I did these moves” records only the transfers marked ↪. Car and Credicorp payments are already recorded automatically.</p></div>`}
+function splitRows(L){return L.map(s=>`<div class="row"><div class="t"><b>${s.tx?'↪ ':''}${esc(s.label)}</b>${s.hint?`<span>${esc(s.hint)}</span>`:''}</div><div class="amt">${$f(s.amt)}</div></div>`).join('')}
+function doSplit(pid,key){let n=0;(D.split[key]||[]).forEach((s,i)=>{if(!s.tx)return;const rid='split-'+pid+'-'+i;if(D.tx.some(x=>x.rid===rid))return;
+  D.tx.push({id:uid(),date:td(),type:s.tx.type,acct:s.tx.acct,to:s.tx.to,amt:s.amt,cat:'',note:s.label,rid});n++});
+  D.paySeen=pid;sv();draw();toast(n?n+' move'+(n>1?'s':'')+' recorded.':'Already recorded.')}
+
+function home(){if(!D.accounts.length)return welcome();
+  const {a,d}=calc(),m=mk(),L=leftToSpend(m),now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),
+    weeks=Math.max(1,(dim-now.getDate()+1)/7),perWeek=L.left/weeks;
+  const flex=D.budget.filter(b=>!b.fixed&&capOf(b,m)>0);
+  const unc=Object.keys(L.S.s).filter(c=>!D.budget.some(b=>b.cat===c)&&L.S.s[c]>0);
+  const ring=D.goals[0],gs=ring?goalSaved(ring,a):0;
+  const bk=D.lastBackup?Math.floor(ddays(td(),D.lastBackup)):999;
+  const up=upcoming(14);
+  return`${standalone()?'':installTip()}${payCard()}
+  <div class="c"><div class="l">Left to spend in ${MN[now.getMonth()]}</div>
+    <div class="big ${L.left<0?'bad':''}">${$f(L.left)}</div>${bar(L.used,L.cap,1)}
+    <p class="m">${L.left>=0?`About <b>${$f(perWeek)}</b> a week until the month ends. `:'<b class="bad">Over your limits.</b> Stop non-essential spending until payday. '}Spent ${$f(L.used)} of ${$f(L.cap)}.</p>
+    <div style="margin-top:8px">${flex.map(b=>{const s=L.S.s[b.cat]||0,c=capOf(b,m);return`<div class="row" onclick="go('plan')"><div class="t"><b>${esc(b.cat)}</b>${bar(s,c,1)}</div><div class="amt ${c-s<0?'bad':''}">${$f(c-s)} <span class="l">left</span></div></div>`}).join('')}
+    ${unc.length?`<div class="row"><div class="t"><b>No limit set</b><span>${unc.map(c=>esc(c)+' '+$f(L.S.s[c])).join(' · ')}</span></div><div class="amt">${$f(unc.reduce((x,c)=>x+L.S.s[c],0))}</div></div>`:''}</div></div>
+  <div class="c"><div class="l">Money in your accounts</div><div class="big">${$f(sum(a))}</div>
+    ${D.accounts.map(x=>`<div class="row"><div class="t"><b>${esc(x.name)}</b></div><div class="amt">${$f(a[x.id])}</div></div>`).join('')}</div>
+  <div class="c"><h2>Coming up (next 14 days)</h2>${up.length?up.map(x=>`<div class="row"><div class="t"><b>${esc(x.name)}</b><span>${dlabel(x.d)}${x.where?' · '+esc(x.where):''}</span></div><div class="amt ${x.type==='income'||x.type==='refund'?'ok':''}">${x.amt==null?'':(x.type==='income'||x.type==='refund'?'+':'')+$f(x.amt)}</div></div>`).join(''):'<p class="m">Nothing scheduled.</p>'}</div>
+  <div class="two"><div class="c" onclick="go('more')"><div class="l">Total debt</div><div class="n bad">${$f(sum(d))}</div>${D.debts.filter(x=>x.focus).map(x=>`<div class="l" style="margin-top:6px">${esc(x.name)}: <b class="bad">${$f(d[x.id])}</b></div>`).join('')}</div>
+  <div class="c" onclick="go('plan')"><div class="l">${ring?esc(ring.name):'Goal'}</div><div class="n">${$f(gs)}</div>${ring?bar(gs,ring.target)+`<div class="l" style="margin-top:6px">of ${$f(ring.target)}</div>`:''}</div></div>
+  ${bk>7?`<div class="c hint" style="margin-top:12px" onclick="go('more')"><h2>Back up your data</h2><p class="m" style="margin:0">${D.lastBackup?'Last backup '+bk+' days ago.':'No backup yet.'} Tap here, then “Save backup file”. If this phone is lost or reset, the backup is the only copy.</p></div>`:''}
+  ${saveOK?'':'<div class="c bad">Saving is blocked on this device, so changes are not kept.</div>'}`}
+
+/* Activity */
+const tyLabel={expense:'Spent',income:'Received',refund:'Refund',transfer:'Moved',debtpay:'Paid debt'};
+function act(){const S=spend(am),L=D.tx.filter(t=>t.date.slice(0,7)===am).sort((a,b)=>a.date===b.date?(a.id<b.id?1:-1):(a.date<b.date?1:-1));
+  let h=`<div class="mnav"><button onclick="shiftM(-1)">‹</button><b>${mname(am)}</b><button onclick="shiftM(1)">›</button></div>
+  <div class="two" style="margin-bottom:12px"><div class="c"><div class="l">Money in</div><div class="n ok">${$f(S.inc)}</div></div><div class="c"><div class="l">Spending (after refunds)</div><div class="n">${$f(S.ex)}</div></div></div>
+  <p class="m" style="margin:-4px 2px 4px">Moves between your accounts and debt payments are not spending. Card purchases count when you make them.</p>`;
+  if(!L.length)return h+'<div class="c"><p class="m" style="margin:0">Nothing this month.</p></div>';
+  let cur='';h+='';L.forEach(t=>{if(t.date!==cur){if(cur)h+='</div>';cur=t.date;h+=`<div class="day">${dlabel(t.date)}</div><div class="c" style="padding:4px 16px">`}
+    const plus=t.type==='income'||t.type==='refund',neutral=t.type==='transfer'||t.type==='debtpay';
+    const title=t.type==='expense'||t.type==='refund'||t.type==='income'?(t.cat||tyLabel[t.type]):(t.type==='transfer'?'Moved to '+nm(t.to):'Paid '+nm(t.to));
+    const sub=[t.note&&t.note!==title?t.note:'',t.type==='transfer'?'from '+nm(t.acct):nm(t.acct),t.auto?'automatic':''].filter(Boolean).join(' · ');
+    h+=`<div class="row ${sel===t.id?'sel':''}" onclick="sel=sel==='${t.id}'?'':'${t.id}';pend='';draw()"><div class="t"><b>${esc(title)}</b><span>${esc(sub)}</span></div><div class="amt ${plus?'ok':neutral?'mu':''}">${plus?'+':neutral?'':'−'}${$f(t.amt).replace('−','')}</div></div>`;
+    if(sel===t.id)h+=`<div class="row sel" style="border-top:0"><span class="l">${tyLabel[t.type]}${t.pr!=null?' · principal '+$f(t.pr):''}</span><button class="k bad" onclick="event.stopPropagation();delTx('${t.id}')">${pend===t.id?'Tap again to delete':'Delete'}</button></div>`});
+  return h+'</div>'}
+function shiftM(k){let y=+am.slice(0,4),m=+am.slice(5)+k;if(m<1){m=12;y--}if(m>12){m=1;y++}am=y+'-'+p2(m);sel='';draw()}
+function delTx(i){if(pend!==i){pend=i;return draw()}pend='';sel='';const t=D.tx.find(x=>x.id===i);
+  if(t&&t.rid&&!t.rid.startsWith('split'))D.skip[t.rid]=1;D.tx=D.tx.filter(x=>x.id!==i);sv();draw();toast('Deleted.')}
+
+/* Add */
+let aT='expense',aCat='',aAmt='',aNote='',aDate='',aAcct='',aTo='',dupKey='';
+const TYPES=[['expense','Spent'],['income','Got paid'],['refund','Refund'],['transfer','Move'],['debtpay','Pay debt']];
+function catsFor(t){if(t==='income')return['Salary','Gift','Reimbursement','Other income'];
+  const s=[];D.budget.filter(b=>!b.fixed).concat(D.budget.filter(b=>b.fixed)).forEach(b=>s.push(b.cat));
+  D.tx.forEach(x=>{if((x.type==='expense'||x.type==='refund')&&x.cat&&!s.includes(x.cat))s.push(x.cat)});if(!s.includes('Misc'))s.push('Misc');return s}
+function addv(){if(!D.accounts.length)return welcome();
+  const accts=D.accounts.map(x=>[x.id,x.name]),cards=D.debts.filter(x=>x.card).map(x=>[x.id,x.name+' (credit card)']),debts=D.debts.map(x=>[x.id,x.name]);
+  const opt=(L,v)=>L.map(([i,n])=>`<option value="${i}" ${i===v?'selected':''}>${esc(n)}</option>`).join('');
+  const from=aAcct||D.accounts[0].id;
+  let f='';
+  if(aT==='expense'||aT==='refund'||aT==='income'){const cs=catsFor(aT);if(aCat&&!cs.includes(aCat))cs.push(aCat);
+    f+=`<div class="fld"><label>${aT==='income'?'What is it':'Category'}</label><div class="chips">${cs.map(c=>`<button class="chip ${c===aCat?'on':''}" onclick="aCat=this.dataset.c;draw()" data-c="${esc(c)}">${esc(c)}</button>`).join('')}<button class="chip" onclick="sheet('New category','',v=>{aCat=v},{text:1})">+ New</button></div></div>
+    <div class="fld"><label>${aT==='expense'?'Paid with':aT==='refund'?'Refunded to':'Received in'}</label><select onchange="aAcct=this.value">${opt(accts.concat(aT==='income'?[]:cards),from)}</select></div>`}
+  else{f+=`<div class="fld"><label>From</label><select onchange="aAcct=this.value">${opt(accts,from)}</select></div>
+    <div class="fld"><label>${aT==='transfer'?'To your account':'Debt or card'}</label><select onchange="aTo=this.value"><option value="">Choose…</option>${opt(aT==='transfer'?accts.filter(x=>x[0]!==from):debts,aTo)}</select></div>`}
+  return`<div class="c"><div class="seg">${TYPES.map(([k,l])=>`<button class="${aT===k?'on':''}" onclick="aT='${k}';aCat='';aTo='';draw()">${l}</button>`).join('')}</div>
+  <input class="amtin" id="aa" type="text" inputmode="decimal" placeholder="$0.00" value="${esc(aAmt)}" oninput="aAmt=this.value" autocomplete="off">
+  ${f}
+  <div class="two"><div class="fld"><label>Date</label><input type="date" value="${aDate||td()}" onchange="aDate=this.value"></div>
+  <div class="fld"><label>Note (optional)</label><input value="${esc(aNote)}" oninput="aNote=this.value" placeholder="e.g. Shell"></div></div>
+  <button class="b" onclick="save()">Save</button>
+  <p class="m">${aT==='transfer'?'Moving money between your own accounts is not income or spending.':aT==='debtpay'?'Card and loan payments are not spending; the purchases already counted when you made them.':aT==='refund'?'Refunds reduce spending in their category.':'Tip: purchases on a credit card count as spending today, and raise that card’s debt.'}</p></div>`}
+function save(){const amt=parseFloat(String(aAmt).replace(/[^0-9.]/g,''));const t={id:uid(),date:aDate||td(),type:aT,acct:aAcct||D.accounts[0].id,to:'',amt,cat:'',note:aNote.trim()};
+  if(!(amt>0))return toast('Enter an amount.');
+  if(aT==='transfer'||aT==='debtpay'){t.to=aTo;if(!t.to)return toast('Choose where the money goes.');if(t.to===t.acct)return toast('Choose a different account.')}
+  else{t.cat=aCat;if(!t.cat)return toast('Choose a category.')}
+  const key=[t.date,t.type,t.acct,t.to,t.amt.toFixed(2),t.cat].join('|');
+  if(D.tx.some(x=>[x.date,x.type,x.acct,x.to||'',x.amt.toFixed(2),x.cat||''].join('|')===key)&&dupKey!==key){dupKey=key;return toast('This looks like a duplicate of one already saved today. Tap Save again to add it anyway.')}
+  dupKey='';D.tx.push(t);sv();
+  let msg='Saved: '+(t.cat||tyLabel[t.type])+' '+$f(t.amt)+'.';
+  if(t.type==='expense'){const b=D.budget.find(x=>x.cat===t.cat),m=t.date.slice(0,7);if(b&&!b.fixed){const s=spend(m).s[t.cat]||0,l=capOf(b,m)-s;msg+=l>=0?' '+$f(l)+' left in '+t.cat+'.':' '+t.cat+' is '+$f(-l)+' over its limit.'}}
+  aAmt='';aNote='';aCat='';aTo='';draw();toast(msg)}
+
+/* Plan */
+function plan(){if(!D.accounts.length)return welcome();const m=mk(),S=spend(m),{a}=calc();
+  const row=b=>{const s=S.s[b.cat]||0,c=capOf(b,m);return`<div class="row"><div class="t"><b>${esc(b.cat)}</b><span>${$f(s)} of ${$f(c)}${b.m&&b.m[m]!=null?' (this month only)':''}</span>${bar(s,c,1)}</div><div style="text-align:right"><div class="amt ${c-s<0?'bad':''}">${$f(c-s)}</div><button class="k" onclick="editCap(${D.budget.indexOf(b)})">Edit</button></div></div>`};
+  const flex=D.budget.filter(b=>!b.fixed),fix=D.budget.filter(b=>b.fixed);
+  return`<div class="c"><h2>Payday plan</h2>${D.split.p15?`<div class="l" style="margin-top:4px">Pay on the 15th</div>${splitRows(D.split.p15)}`:''}${D.split.p30?`<div class="l" style="margin-top:10px">Pay on the 30th</div>${splitRows(D.split.p30)}`:''}
+    ${D.split.p15||D.split.p30?'':'<p class="m">No payday plan loaded.</p>'}</div>
+  <div class="c"><h2>Spending limits · ${MN[+m.slice(5)-1]}</h2>${flex.map(row).join('')}
+    <button class="b g" onclick="sheet('New category name','',v=>{if(!D.budget.some(b=>b.cat===v))D.budget.push({cat:v,cap:0})},{text:1})">Add a category</button></div>
+  ${fix.length?`<div class="c"><h2>Bills (paid automatically)</h2>${fix.map(row).join('')}<p class="m">Not included in “Left to spend”: these come out by themselves.</p></div>`:''}
+  <div class="c"><h2>Goals</h2>${D.goals.length?D.goals.map(g=>{const s=goalSaved(g,a);return`<div class="row"><div class="t"><b>${esc(g.name)}</b><span>${$f(s)} of ${$f(g.target)} · ${g.target?Math.round(s/g.target*100):0}%${g.acct?' · = '+esc(nm(g.acct))+' balance':''}</span>${bar(s,g.target)}</div>${g.acct?'':`<button class="k" onclick="editGoal('${g.id}')">Set</button>`}</div>`}).join(''):'<p class="m">No goals.</p>'}
+    ${D.goals.some(g=>g.acct)?'<p class="m">To add to a linked goal, record a <b>Move</b> into that account.</p>':''}</div>`}
+const goalSaved=(g,a)=>g.acct?(a[g.acct]||0):(g.saved||0);
+function editCap(i){const b=D.budget[i],c=b.cat,m=mk();sheet('Monthly limit for '+c,capOf(b,m).toFixed(2),v=>{if(b.m&&b.m[m]!=null)b.m[m]=v;else b.cap=v},{note:b.m&&b.m[m]!=null?'This changes this month’s limit only.':'Applies to every month.'})}
+function editGoal(id){const g=D.goals.find(x=>x.id===id);sheet('Saved so far for '+g.name,(g.saved||0).toFixed(2),v=>{g.saved=v})}
+
+/* More */
+function more(){const has=D.accounts.length;let h='';
+  if(has){const{a,d}=calc();
+    h+=`<div class="c"><h2>Debts</h2>${D.debts.map(x=>{const b=d[x.id];return`<div class="row"><div class="t"><b>${esc(x.name)}</b><span>${x.rate?x.rate+'%/month':'0%'}${x.pay?' · '+$f(x.pay)+'/mo':''}${x.due?' · due the '+x.due:''}${x.pay?' · '+monthsLeft({...x,bal:b}):''}</span></div><div style="text-align:right"><div class="amt bad">${$f(b)}</div><button class="k" onclick="setBal('debts','${x.id}')">Set</button></div></div>`}).join('')}
+      <div class="row"><div class="t"><b>Total</b></div><div class="amt bad">${$f(sum(d))}</div></div><p class="m">Months left are estimates (fixed payment and rate). The car loan falls by the principal part of each payment only.</p></div>
+    <div class="c"><h2>Accounts and assets</h2>${D.accounts.map(x=>`<div class="row"><div class="t"><b>${esc(x.name)}</b></div><div style="text-align:right"><div class="amt">${$f(a[x.id])}</div><button class="k" onclick="setBal('accounts','${x.id}')">Set</button></div></div>`).join('')}
+      ${D.assets.map(x=>`<div class="row"><div class="t"><b>${esc(x.name)}</b><span>Estimate</span></div><div style="text-align:right"><div class="amt">${$f(x.val)}</div><button class="k" onclick="setBal('assets','${x.id}')">Set</button></div></div>`).join('')}
+      <p class="m">Use Set when a balance differs from your bank app. It records the difference so history stays intact.</p></div>
+    <div class="c"><h2>Automatic payments</h2>${D.rec.filter(r=>nextDate(r)).map(r=>({r,d:nextDate(r)})).sort((x,y)=>x.d<y.d?-1:1).map(({r,d})=>`<div class="row"><div class="t"><b>${esc(r.name)}</b><span>Next ${dlabel(d)} · ${esc(nm(r.acct))}${r.to?' → '+esc(nm(r.to)):''}</span></div><div class="amt ${r.type==='income'||r.type==='refund'?'ok':''}">${$f(r.amt)}</div></div>`).join('')||'<p class="m">None loaded.</p>'}
+      <p class="m">The app can’t run while closed, so it adds these when you open it, each on its real date, never twice. If you already entered one by hand within 3 days, it is skipped. Deleting an automatic one stops it for that month only. To change amounts or dates, ask Claude for an updated data file.</p></div>`}
+  h+=`<div class="c"><h2>Backup and restore</h2><p class="m" style="margin:0 0 4px">Everything is saved automatically on this phone, inside this app. It is not in iCloud and not synced to your computer. Save a backup file weekly (to Files, iCloud Drive or email).${D.lastBackup?' Last backup: '+dlabel(D.lastBackup)+'.':' No backup yet.'}</p>
+    ${has?`<button class="b" onclick="backup()">Save backup file</button><button class="b g" onclick="copyText(JSON.stringify(D),'Backup copied. Paste it into a note or email.')">Copy backup as text</button><button class="b g" onclick="copyText(csv(),'Transactions copied as CSV.')">Copy transactions (CSV)</button>`:''}
+    <label class="b g" style="text-align:center;cursor:pointer">Restore or import a file<input type="file" accept=".json,.csv,.txt,application/json,text/plain" hidden onchange="readFile(this)"></label>
+    <details style="margin-top:12px"><summary class="l">Paste text instead</summary><textarea id="pi" placeholder="Paste a backup, data file or CSV here"></textarea><button class="b g" onclick="imp(q('#pi').value)">Import pasted text</button></details></div>
+  ${has?`<div class="c"><button class="b r" style="margin:0" onclick="confirmSheet('Erase all data?','This deletes everything in this app on this phone. Save a backup first.','Erase',()=>{D=E();sv();draw()},1)">Erase all data</button></div>`:''}
+  <p class="m" style="text-align:center">My Finances · data stays on this device · no bank connection</p>`;return h}
+function setBal(k,id){const o=D[k].find(x=>x.id===id),{a,d}=calc(),cur=k==='accounts'?a[id]:k==='debts'?d[id]:o.val,f=k==='assets'?'val':'bal';
+  sheet('Set '+o.name+' to',cur.toFixed(2),v=>{o[f]+=v-cur},{note:'Enter the balance your bank shows now.'})}
+function csv(){const h='date,type,account,to,amount,category,note',r=D.tx.map(t=>[t.date,t.type,nm(t.acct),t.to?nm(t.to):'',t.amt,t.cat||'',t.note||''].map(z=>'"'+String(z).replace(/"/g,'""')+'"').join(','));return[h].concat(r).join('\n')}
+function copyText(s,msg){const done=()=>{if(s.startsWith('{')){D.lastBackup=td();sv();draw()}toast(msg)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(s).then(done,()=>fallbackCopy(s,done));else fallbackCopy(s,done)}
+function fallbackCopy(s,done){const t=document.createElement('textarea');t.value=s;document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){toast('Copy failed.')}t.remove()}
+async function backup(){const name='finances-backup-'+td()+'.json',txt=JSON.stringify(D),file=new File([txt],name,{type:'application/json'});
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});D.lastBackup=td();sv();draw();return toast('Backup saved.')}}
+  catch(e){if(e&&e.name==='AbortError')return}
+  const u=URL.createObjectURL(file),l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);
+  D.lastBackup=td();sv();draw();toast('Backup file created.')}
+function readFile(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>imp(String(r.result));r.readAsText(f);inp.value=''}
+const pc=l=>{const r=[];let c='',s=false;for(const h of l){if(h==='"')s=!s;else if(h===','&&!s){r.push(c);c=''}else c+=h}r.push(c);return r};
+function imp(txt){txt=(txt||'').trim();if(!txt)return toast('Nothing to import.');
+  if(txt[0]==='{'){let j;try{j=JSON.parse(txt)}catch(e){return toast('That file is not valid.')}
+    if(j.patch){if(!D.accounts.length)return toast('Load your data file first.');let n=0;
+      (j.budget||[]).forEach(b=>{const x=D.budget.find(z=>z.cat===b.cat);if(x)Object.assign(x,b);else D.budget.push(b);n++});
+      (j.goals||[]).forEach(g=>{const x=D.goals.find(z=>z.id===g.id);if(x){Object.assign(x,g);n++}});
+      if(j.rec){D.rec=j.rec;n++}if(j.split){D.split=j.split;n++}if(j.debts)j.debts.forEach(g=>{const x=D.debts.find(z=>z.id===g.id);if(x){Object.assign(x,g);n++}});
+      sv();auto();go('home');return toast('Update applied ('+n+' changes). Your transactions were not touched.')}
+    if(!j.accounts){if(!j.rec)return toast('That file is not a finance data file.');D.rec=j.rec;if(j.opened)D.opened=j.opened;sv();auto();go('home');return toast('Automatic payments loaded.')}
+    const doIt=()=>{const keep={rec:D.rec,opened:D.opened,split:D.split};D=Object.assign(E(),j);
+      if(!j.rec||!j.rec.length)D.rec=keep.rec;if(!j.opened)D.opened=keep.opened;if(!j.split||!Object.keys(j.split).length)D.split=keep.split;
+      D.goals.forEach(g=>{if(g.saved==null&&!g.acct)g.saved=0});sv();auto();go('home');toast('Data loaded.')};
+    if(D.accounts.length)return confirmSheet('Replace all data?','This replaces everything in the app with the file you chose.','Replace',doIt,1);return doIt()}
+  if(!D.accounts.length)return toast('Load your data file first, then CSV transactions.');
+  const id={};D.accounts.concat(D.debts).forEach(x=>id[x.name.toLowerCase()]=x.id);
+  const k=t=>[t.date,t.type,t.acct,t.to||'',(+t.amt).toFixed(2),t.note||''].join('|');const ks=new Set(D.tx.map(k));let n=0,s=0,bad=0;
+  txt.split(/\r?\n/).slice(1).filter(Boolean).forEach(l=>{const c=pc(l),t={id:uid(),date:c[0],type:c[1],acct:id[(c[2]||'').toLowerCase()],to:id[(c[3]||'').toLowerCase()]||'',amt:parseFloat(c[4]),cat:c[5]||'',note:c[6]||''};
+    if(!t.acct||!(t.amt>0)||!/^\d{4}-\d\d-\d\d$/.test(t.date)||!tyLabel[t.type]){bad++;return}if(ks.has(k(t))){s++;return}ks.add(k(t));D.tx.push(t);n++});
+  sv();draw();toast(n+' added, '+s+' duplicates skipped, '+bad+' rows rejected.')}
+
+/* ---------- Navigation ---------- */
+const I={home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  act:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r=".6"/><circle cx="3.5" cy="12" r=".6"/><circle cx="3.5" cy="18" r=".6"/>',
+  add:'<circle cx="12" cy="12" r="11" fill="currentColor" stroke="none"/><path d="M12 7v10M7 12h10" stroke="var(--acx)" stroke-width="2.2"/>',
+  plan:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  more:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>'};
+const V={home:['Home',home],act:['Activity',act],add:['Add',addv],plan:['Plan',plan],more:['More',more]};
+function go(v){view=v;sel='';pend='';draw();window.scrollTo(0,0)}
+function draw(){q('#ttl').textContent=view==='add'?'Add':V[view][0];
+  q('#nav').innerHTML=Object.keys(V).map(k=>`<button class="${k===view?'on':''} ${k==='add'?'add':''}" onclick="go('${k}')" aria-label="${V[k][0]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>${k==='add'?'':V[k][0]}</button>`).join('');
+  q('#v').innerHTML=V[view][1]()}
+ld();auto();draw();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(auto()||true)draw()}});
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
